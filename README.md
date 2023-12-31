@@ -1,54 +1,54 @@
 #Dabase structure 
 
 -- Account table
-CREATE TABLE account (
-  userId INT(11) PRIMARY KEY AUTO_INCREMENT,
-  firstName VARCHAR(50),
-  lastName VARCHAR(50),
-  email VARCHAR(50),
-  password VARCHAR(255),
-  role VARCHAR(20) DEFAULT 'User',
-  avatar VARCHAR(255),
-  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+CREATE TABLE `photo_app`.`accounts` (
+`userId` INT(11) NOT NULL AUTO_INCREMENT , 
+`firstName` VARCHAR(50) NOT NULL , 
+`lastName` VARCHAR(50) NOT NULL , 
+`email` VARCHAR(50) NOT NULL , 
+`password` VARCHAR(255) NOT NULL , 
+`role` VARCHAR(20) NOT NULL DEFAULT 'User' , 
+`avatar` VARCHAR(255) NOT NULL , 
+`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+PRIMARY KEY (`userId`)) ENGINE = InnoDB;
 
 -- Album 
-Create TABLE album (
-  albumId int(11) PRIMARY KEY AUTO_INCREMENT,
-  userId int(11) not null,
-  albumName varchar(50) not null,
-  FOREIGN KEY (userId) REFERENCES account (userId) ON DELETE SET NULL;
-);
+CREATE TABLE `photo_app`.`album` (
+`albumId` INT(11) NOT NULL AUTO_INCREMENT , 
+`userId` INT(11) NOT NULL , 
+`albumName` VARCHAR(50) NOT NULL, 
+FOREIGN KEY (`userId`) REFERENCES `account`(`userId`) ON DELETE RESTRICT ON UPDATE RESTRICT),
+PRIMARY KEY (`albumId`)) ENGINE = InnoDB;
 
 -- Category
-CREATE TABLE category (
-  cateID int(11) PRIMARY KEY AUTO_INCREMENT,
-  cateName varchar(20) not null,
-  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+CREATE TABLE `photo_app`.`category` (
+`cateID` INT(11) NOT NULL AUTO_INCREMENT , 
+`cateName` VARCHAR(20) NOT NULL, 
+`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+PRIMARY KEY (`cateID`)) ENGINE = InnoDB;
 
--- Photo table
-Create TABLE photo (
-  photoId int(11) PRIMARY KEY AUTO_INCREMENT,
-  userId int(11) not null,
-  caption varchar(100),
-  description varchar(255),
-  category int(11),
-  photoPath varchar(255) not null,
-  updateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  album int(11),
-  FOREIGN KEY (album) REFERENCES album (albumId) ON DELETE SET NULL,
-  FOREIGN KEY (userId) REFERENCES account (userId) ON DELETE SET NULL;
-  FOREIGN KEY (category) REFERENCES category (cateID) ON DELETE SET NULL;
-);
+-- Photo
+CREATE TABLE `photo_app`.`photo` (
+`photoId` INT(11) NOT NULL AUTO_INCREMENT , 
+`userId` INT(11) NOT NULL , 
+`caption` VARCHAR(100) NOT NULL , 
+`description` VARCHAR(225) NOT NULL , 
+`category` INT(11) NOT NULL , 
+`photoPath` VARCHAR(255) NOT NULL , 
+`updateDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+`album` INT(11) NOT NULL , 
+PRIMARY KEY (`photoId`)) ENGINE = InnoDB;
+ALTER TABLE `photo` ADD FOREIGN KEY (`album`) REFERENCES `album`(`albumId`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `photo` ADD FOREIGN KEY (`userId`) REFERENCES `account`(`userId`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `photo` ADD FOREIGN KEY (`category`) REFERENCES `category`(`cateID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- Comment
-CREATE TABLE comment (
-  cmtID int(11) PRIMARY KEY AUTO_INCREMENT,
-  photoId int(11) not null,
-  userId int(11) not null,
-  content varchar(255) not null,
-  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (userId) REFERENCES account (userId) ON DELETE SET NULL;
-  FOREIGN KEY (photoId) REFERENCES photo (photoId) ON DELETE SET NULL;
-)
+CREATE TABLE `photo_app`.`comment` (
+`cmtID` INT(11) NOT NULL AUTO_INCREMENT , 
+`photoId` INT(11) NOT NULL , 
+`userId` INT(11) NOT NULL , 
+`content` VARCHAR(255) NOT NULL , 
+`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+PRIMARY KEY (`cmtID`)) ENGINE = InnoDB;
+ALTER TABLE `comment` ADD FOREIGN KEY (`userId`) REFERENCES `account`(`userId`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
+ALTER TABLE `comment` ADD FOREIGN KEY (`photoId`) REFERENCES `photo`(`photoId`) ON DELETE RESTRICT ON UPDATE RESTRICT;
